@@ -13,6 +13,7 @@ class Block:
         self.timestamp = timestamp
         self.previous_hash = previous_hash
         self.nonce = nonce
+        self.hash = self.compute_hash()
 
     def compute_hash(self):
         """
@@ -124,7 +125,7 @@ class Blockchain:
         new_block = Block(index=last_block.index + 1,
                           transactions=self.unconfirmed_transactions,
                           timestamp=time.time(),
-                          previous_hash=last_block.hash)
+                          previous_hash=last_block.hash )
 
         proof = self.proof_of_work(new_block)
         self.add_block(new_block, proof)
@@ -144,11 +145,13 @@ blockchain.create_genesis_block()
 # the address to other participating members of the network
 peers = set()
 
+whoami = ''
 
 # endpoint to submit a new transaction. This will be used by
 # our application to add new data (posts) to the blockchain
 @app.route('/new_transaction', methods=['POST'])
 def new_transaction():
+    # 3 fields in total author content timestamp
     tx_data = request.get_json()
     required_fields = ["author", "content"]
 
@@ -172,6 +175,7 @@ def get_chain():
     consensus()
     chain_data = []
     for block in blockchain.chain:
+        # block.__dict__ gets all properties of an object
         chain_data.append(block.__dict__)
     return json.dumps({"length": len(chain_data),
                        "chain": chain_data,
@@ -212,10 +216,14 @@ def register_with_existing_node():
     request, and sync the blockchain as well as peer data.
     """
     node_address = request.get_json()["node_address"]
+    whoami=request.host_url
+    longitud=len(whoami)
+    whoami=whoami[:longitud-1]
     if not node_address:
         return "Invalid data", 400
 
-    data = {"node_address": request.host_url}
+    # don't we send that in the curl?
+    data = {"node_address": whoami}
     headers = {'Content-Type': "application/json"}
 
     # Make a request to register with remote node and obtain information
@@ -284,13 +292,20 @@ def consensus():
     found, our chain is replaced with it.
     """
     global blockchain
+    global peers
 
     longest_chain = None
     current_len = len(blockchain.chain)
 
+    if whoami in peers: peers.remove(whoami)
+    print(peers) # if inside the peers is the current server we get a loop
+    peers = []
+
     for node in peers:
+        if node == whoami:
+            break
         print('{}/chain'.format(node))
-        response = requests.get('{}chain'.format(node))
+        response = requests.get('{}/chain'.format(node))
         print("Content", response.content)
         length = response.json()['length']
         chain = response.json()['chain']

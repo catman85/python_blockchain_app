@@ -9,6 +9,7 @@ from app import app
 # The node with which our application interacts, there can be multiple
 # such nodes as well.
 CONNECTED_NODE_ADDRESS = "http://127.0.0.1:8000"
+NODE_ADDRESS2 = "http://127.0.0.1:8001"
 
 posts = []
 
@@ -38,8 +39,8 @@ def fetch_posts():
 def index():
     fetch_posts()
     return render_template('index.html',
-                           title='YourNet: Decentralized '
-                                 'content sharing',
+                           title='Πτυχιακή Εργασία '
+                                 'Decentralized',
                            posts=posts,
                            node_address=CONNECTED_NODE_ADDRESS,
                            readable_time=timestamp_to_string)
@@ -70,3 +71,16 @@ def submit_textarea():
 
 def timestamp_to_string(epoch_time):
     return datetime.datetime.fromtimestamp(epoch_time).strftime('%H:%M')
+
+
+@app.route('/show', methods=['GET'])
+def show_blockchain():
+    # get_chain_address = "{}/chain".format(NODE_ADDRESS2)
+    get_chain_address = "{}/chain".format(CONNECTED_NODE_ADDRESS)
+    response = requests.get(get_chain_address)
+    return response.content
+
+@app.route('/pending', methods=['GET'])
+def show_pending():
+    response = requests.get("{}/pending_tx".format(CONNECTED_NODE_ADDRESS))
+    return response.content
