@@ -11,20 +11,19 @@ Please read the [step-by-step implementation tutorial](https://github.com/satwik
 Clone the project,
 
 ```sh
-$ git clone https://github.com/satwikkansal/python_blockchain_app.git
+$ git clone https://github.com/catman85/python_blockchain_app.git
 ```
 
 Start a blockchain node server,
 
 ```sh
-$ export FLASK_APP=node_server.py
-$ flask run --port 8000
+$ export FLASK_APP=node_server.py && flask run --port 8000
 ```
 
 One instance of our blockchain node is now up and running at port 8000.
 
 
-To run the application,
+To run the application, with hot reload
 
 ```sh
 $ python run_app.py
