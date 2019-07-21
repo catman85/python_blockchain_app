@@ -76,3 +76,28 @@ curl -X POST \
 This will update the newer nodes with the longest chain, and the list of peers, so that they are able to actively participate in the mining process post registration.
 
 To update the node with which the frontend application syncs, change `CONNECTED_NODE_ADDRESS` field in the [views.py](https://github.com/satwikkansal/python_blockchain_app/blob/master/app/views.py) file.
+
+# Quick Startup
+
+```sh
+export FLASK_APP=node_server.py && flask run --port 8000
+```
+
+optional:
+```sh optional
+# spinning up new nodes
+export FLASK_APP=node_server.py && flask run --port 8001
+curl -X POST http://127.0.0.1:8001/register_with -H 'Content-Type: application/json' -d '{"node_address": "http://127.0.0.1:8000"}'
+```
+
+```sh
+python run_app.py
+```
+
+:5000 is the client, 
+:8000 is the server,
+
+visit localhost:5000,
+localhost:8000/chain,
+localhost:8000/mine
+
