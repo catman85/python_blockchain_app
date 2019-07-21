@@ -23,7 +23,7 @@ $ export FLASK_APP=node_server.py && flask run --port 8000
 One instance of our blockchain node is now up and running at port 8000.
 
 
-To run the application, with hot reload
+To run the application, with **hot-reload**
 
 ```sh
 $ python run_app.py
@@ -31,19 +31,24 @@ $ python run_app.py
 
 The application should be up and running at [http://localhost:5000](http://localhost:5000).
 
-Here are a few screenshots
+## Use Case
 
-1. Posting some content
+1.Write some content, click *post* and then *Request to mine* 
 
-![image.png](https://github.com/satwikkansal/python_blockchain_app/raw/master/screenshots/1.png)
+![ ](https://i.imgur.com/FGRRtG8.jpg)
 
-2. Requesting the node to mine
+2.Have a look at the blockchain, by clicking at *Show Chain*
 
-![image.png](https://github.com/satwikkansal/python_blockchain_app/raw/master/screenshots/2.png)
+![ ](https://i.imgur.com/N7fZ2mu.jpg)
 
-3. Resyncing with the chain for updated data
+3.Resyncing with the chain for updated data
 
-![image.png](https://github.com/satwikkansal/python_blockchain_app/raw/master/screenshots/3.png)
+![ ](https://i.imgur.com/Di00d4a.jpg)
+
+4.Write some new content and click *post* without clicking *Request to mine*. 
+ Then have a look at the pending transactions pool. 
+
+![ ](https://i.imgur.com/uqojGk4.jpg)
 
 To play around by spinning off multiple custom nodes, use the `add_nodes/` endpoint to register a new node. 
 
@@ -77,7 +82,7 @@ This will update the newer nodes with the longest chain, and the list of peers, 
 
 To update the node with which the frontend application syncs, change `CONNECTED_NODE_ADDRESS` field in the [views.py](https://github.com/satwikkansal/python_blockchain_app/blob/master/app/views.py) file.
 
-# Quick Startup
+## Quick Startup
 
 ```sh
 export FLASK_APP=node_server.py && flask run --port 8000
