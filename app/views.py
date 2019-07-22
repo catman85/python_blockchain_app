@@ -84,3 +84,15 @@ def show_blockchain():
 def show_pending():
     response = requests.get("{}/pending_tx".format(CONNECTED_NODE_ADDRESS))
     return response.content
+
+@app.route('/show2', methods=['GET'])
+def show_blockchain2():
+    # get_chain_address = "{}/chain".format(NODE_ADDRESS2)
+    get_chain_address = "{}/chain".format(NODE_ADDRESS2)
+    response = requests.get(get_chain_address)
+    return response.content
+
+@app.route('/sync_node',methods=['GET'])
+def sync_node():
+    response = requests.get("{}/consensus".format(NODE_ADDRESS2))
+    return response.content

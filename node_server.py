@@ -97,17 +97,18 @@ class Blockchain:
         previous_hash = "0"
 
         for block in chain:
-            block_hash = block.hash
+            print("Block: ", block)
+            block_hash = block['hash']
             # remove the hash field to recompute the hash again
             # using `compute_hash` method.
-            delattr(block, "hash")
+            # delattr(block, "hash")
 
-            if not cls.is_valid_proof(block, block.hash) or \
-                    previous_hash != block.previous_hash:
+            if not cls.is_valid_proof(block, block['hash']) or \
+                    previous_hash != block['previous_hash']:
                 result = False
                 break
 
-            block.hash, previous_hash = block_hash, block_hash
+            block['hash'], previous_hash = block_hash, block_hash
 
         return result
 
@@ -172,7 +173,7 @@ def new_transaction():
 @app.route('/chain', methods=['GET'])
 def get_chain():
     # make sure we've the longest chain
-    consensus()
+    # consensus()
     chain_data = []
     for block in blockchain.chain:
         # block.__dict__ gets all properties of an object
@@ -285,6 +286,12 @@ def verify_and_add_block():
 def get_pending_tx():
     return json.dumps(blockchain.unconfirmed_transactions)
 
+# FIXME:
+@app.route('/consensus')
+def check_consensus():
+    consensus()
+    return 'Checked Consensus'
+
 
 def consensus():
     """
@@ -297,21 +304,30 @@ def consensus():
     longest_chain = None
     current_len = len(blockchain.chain)
 
+    # FIXME:
+    peers = {'http://127.0.0.1:8001','http://127.0.0.1:8000'}
+
+
     if whoami in peers: peers.remove(whoami)
-    print(peers) # if inside the peers is the current server we get a loop
-    peers = []
+    print("I am", whoami)
+    # print(peers) # if inside the peers is the current server we get a loop
+    # peers = []
 
     for node in peers:
         if node == whoami:
-            break
+            continue
+        print("Checking Node: ", node)
         print('{}/chain'.format(node))
         response = requests.get('{}/chain'.format(node))
-        print("Content", response.content)
         length = response.json()['length']
         chain = response.json()['chain']
+
+        print("Chain: ",chain)
+        # FIXME: # this is inside the if statement
         if length > current_len and blockchain.check_chain_validity(chain):
-            current_len = length
             longest_chain = chain
+            current_len = length
+
 
     if longest_chain:
         blockchain = longest_chain
@@ -327,5 +343,5 @@ def announce_new_block(block):
     respective chains.
     """
     for peer in peers:
-        url = "{}add_block".format(peer)
+        url = "{}/add_block".format(peer)
         requests.post(url, data=json.dumps(block.__dict__, sort_keys=True))
