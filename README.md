@@ -13,6 +13,11 @@ Clone the project,
 ```sh
 $ git clone https://github.com/catman85/python_blockchain_app.git
 ```
+Install Prerequisites,
+
+```sh
+pip install flask, requests
+```
 
 Start a blockchain node server,
 
@@ -22,14 +27,15 @@ $ export FLASK_APP=node_server.py && flask run --port 8000
 
 One instance of our blockchain node is now up and running at port 8000.
 
-
 To run the application, with **hot-reload**
 
 ```sh
 $ python run_app.py
 ```
 
-The application should be up and running at [http://localhost:5000](http://localhost:5000).
+The application should be up and running at [http://localhost:5000](http://localhost:5000)
+
+The server is running at [http://localhost:8000](http://localhost:8000)
 
 ## Use Case
 
